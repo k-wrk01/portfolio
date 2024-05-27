@@ -4,5 +4,7 @@ RUN mkdir /portfolio
 WORKDIR /portfolio
 COPY Gemfile /portfolio/Gemfile
 COPY Gemfile.lock /portfolio/Gemfile.lock
+COPY package.json /portfolio/package.json
+COPY package-lock.json /portfolio/package-lock.json
 RUN bundle install
 COPY . /portfolio
