@@ -1,5 +1,29 @@
 import image from '../profile.png';
+
+import { useState, useEffect } from "react";
+import axios from 'axios';
+
+interface Skill {
+  id: number;
+  name: string;
+  level: number;
+};
+
 export const Profile = () => {
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const getSkills = () => {
+    axios.get('http://localhost:3001/api/skills')
+      .then(response => {
+        setSkills(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the skills!', error);
+      })
+  };
+  useEffect(() => {
+    getSkills();
+  }, []);
+
   return (
     <div className="bg-base-200 min-h-screen py-20 flex flex-col justify-center items-center">
       <h1 className="mb-5 text-6xl text-center font-bold">Profile</h1>
@@ -27,78 +51,22 @@ export const Profile = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>HTML</td>
-                  <td>
-                    <div className="rating gap-1">
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>CSS</td>
-                  <td>
-                    <div className="rating gap-1">
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>React</td>
-                  <td>
-                    <div className="rating gap-1">
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-gray-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-gray-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-gray-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-gray-400 w-5 h-5" />
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ruby</td>
-                  <td>
-                    <div className="rating gap-1">
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ruby on Rails</td>
-                  <td>
-                    <div className="rating gap-1">
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>PostgreSQL</td>
-                  <td>
-                    <div className="rating gap-1">
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-orange-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-gray-400 w-5 h-5" />
-                      <div className="mask mask-heart bg-gray-400 w-5 h-5" />
-                    </div>
-                  </td>
-                </tr>
+                {skills.map((skill) => (
+                  <tr key={skill.id}>
+                    <td>{skill.name}</td>
+                    <td>
+                      <div className="rating gap-1">
+                        {[...Array(5)].map((_array, i) => {
+                          if(skill.level > i) {
+                            return  <div className="mask mask-heart bg-orange-400 w-5 h-5" key={i} />
+                          } else {
+                            return  <div className="mask mask-heart bg-gray-400 w-5 h-5" key={i} />
+                          }
+                        })}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
